@@ -55,7 +55,7 @@ NSString  *const SlideNavigationControllerDidReveal = @"SlideNavigationControlle
 #define MENU_SHADOW_OPACITY 1
 #define MENU_DEFAULT_SLIDE_OFFSET 60
 #define MENU_FAST_VELOCITY_FOR_SWIPE_FOLLOW_DIRECTION 1200
-#define STATUS_BAR_HEIGHT 20
+#define STATUS_BAR_HEIGHT 0
 #define NOTIFICATION_USER_INFO_MENU_LEFT @"left"
 #define NOTIFICATION_USER_INFO_MENU_RIGHT @"right"
 #define NOTIFICATION_USER_INFO_MENU @"menu"
@@ -132,12 +132,12 @@ static SlideNavigationController *singletonInstance;
     // Update shadow size of enabled
     if (self.enableShadow)
         self.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.view.bounds].CGPath;
-    self.landscapeSlideOffset = self.view.frame.size.width/6;
-    self.portraitSlideOffset = self.view.frame.size.width/6;
-    self.panGestureSideOffset = 0;
-    self.avoidSwitchingToSameClassViewController = YES;
-    self.enableShadow = YES;
-    self.enableSwipeGesture = NO;
+    //    self.landscapeSlideOffset = MENU_DEFAULT_SLIDE_OFFSET;
+    //    self.portraitSlideOffset = MENU_DEFAULT_SLIDE_OFFSET;
+    //    self.panGestureSideOffset = 0;
+    //    self.avoidSwitchingToSameClassViewController = YES;
+    //    self.enableShadow = YES;
+    //    self.enableSwipeGesture = NO;
     self.delegate = self;
     // When menu open we disable user interaction
     // When rotates we want to make sure that userInteraction is enabled again
@@ -592,8 +592,6 @@ static SlideNavigationController *singletonInstance;
 - (void)prepareMenuForReveal:(Menu)menu
 {
     // Only prepare menu if it has changed (ex: from MenuLeft to MenuRight or vice versa)
-    if (self.lastRevealedMenu && menu == self.lastRevealedMenu)
-        return;
     
     UIViewController *menuViewController = (menu == MenuLeft) ? self.leftMenu : self.rightMenu;
     UIViewController *removingMenuViewController = (menu == MenuLeft) ? self.rightMenu : self.leftMenu;
@@ -601,7 +599,7 @@ static SlideNavigationController *singletonInstance;
     self.lastRevealedMenu = menu;
     
     [removingMenuViewController.view removeFromSuperview];
-    [self.view.window insertSubview:menuViewController.view atIndex:0];
+    [self.view.superview insertSubview:menuViewController.view atIndex:0];
     
     [self updateMenuFrameAndTransformAccordingToOrientation];
     
